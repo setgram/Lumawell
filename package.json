@@ -1,0 +1,12 @@
+{
+  "name": "lumawell-single-page-blog",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "dependencies": {
+    "mongodb": "^6.12.0"
+  }
+}

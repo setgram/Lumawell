@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="LumaWell Studio is a premium yoga, fitness, wellness, and exercise blog with calming expert guidance for healthier daily living." />
+    <meta name="keywords" content="yoga blog, fitness tips, wellness, exercise, meditation, workouts, healthy lifestyle" />
+    <meta property="og:title" content="LumaWell Studio | Yoga, Fitness & Wellness Blog" />
+    <meta property="og:description" content="Transform your mind and body naturally with yoga, fitness, healthy living, and wellness articles." />
+    <meta property="og:type" content="website" />
+    <title>LumaWell Studio | Yoga, Fitness & Wellness Blog</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #fbfaf7;
+        --surface: #ffffff;
+        --surface-soft: #f7f1e8;
+        --ink: #25322d;
+        --muted: #63706a;
+        --moss: #63795f;
+        --sage: #9caf9b;
+        --lavender: #ded8f4;
+        --mist: #dbe8ee;
+        --ring: rgba(99, 121, 95, 0.18);
+        --shadow: 0 22px 60px rgba(70, 90, 78, 0.15);
+        --radius: 28px;
+      }
+
+      .dark {
+        color-scheme: dark;
+        --bg: #101714;
+        --surface: #151f1a;
+        --surface-soft: #1c2a23;
+        --ink: #f7f4ed;
+        --muted: #c8d0ca;
+        --ring: rgba(156, 175, 155, 0.2);
+        --shadow: 0 22px 60px rgba(0, 0, 0, 0.28);
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.6;
+      }
+      img { display: block; max-width: 100%; }
+      button, input, textarea { font: inherit; }
+      a { color: inherit; text-decoration: none; }
+      .container { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
+      .serif { font-family: Georgia, "Times New Roman", serif; letter-spacing: 0; }
+      .skip {
+        position: fixed; left: 16px; top: 12px; z-index: 100;
+        transform: translateY(-80px); background: var(--surface); color: var(--moss);
+        padding: 10px 16px; border-radius: 999px; box-shadow: var(--shadow); font-weight: 800;
+      }
+      .skip:focus { transform: translateY(0); }
+
+      .nav {
+        position: fixed; inset: 0 0 auto; z-index: 50;
+        transition: background .25s ease, box-shadow .25s ease;
+      }
+      .nav.scrolled { background: color-mix(in srgb, var(--surface) 86%, transparent); backdrop-filter: blur(18px); box-shadow: 0 1px 18px rgba(0,0,0,.07); }
+      .nav-inner { height: 78px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+      .logo { display: inline-flex; align-items: center; gap: 12px; border: 0; background: transparent; color: var(--ink); font-weight: 900; font-size: 1.1rem; cursor: pointer; }
+      .logo-mark, .icon-btn { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 999px; background: rgba(255,255,255,.8); box-shadow: 0 8px 24px rgba(65,85,72,.12); }
+      .dark .logo-mark, .dark .icon-btn { background: rgba(255,255,255,.08); }
+      .nav-links { display: none; align-items: center; gap: 4px; padding: 5px; border-radius: 999px; background: rgba(255,255,255,.55); box-shadow: 0 8px 24px rgba(65,85,72,.08); }
+      .dark .nav-links { background: rgba(255,255,255,.07); }
+      .nav-links a, .mobile-menu a { padding: 10px 13px; border-radius: 999px; font-weight: 750; font-size: .92rem; color: var(--ink); }
+      .nav-links a:hover, .mobile-menu a:hover { color: var(--moss); background: rgba(255,255,255,.55); }
+      .nav-actions { display: flex; gap: 10px; }
+      .icon-btn { border: 0; color: var(--ink); cursor: pointer; transition: transform .2s ease; }
+      .icon-btn:hover { transform: translateY(-2px); }
+      .mobile-menu {
+        display: none; margin: 0 20px 16px; padding: 10px; border-radius: 24px;
+        background: var(--surface); box-shadow: var(--shadow);
+      }
+      .mobile-menu.open { display: grid; }
+
+      .hero {
+        position: relative; min-height: 92vh; display: grid; align-items: center; overflow: hidden;
+        background:
+          linear-gradient(90deg, rgba(248,244,237,.98), rgba(248,244,237,.72), rgba(248,244,237,.08)),
+          url("https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1800&q=82") center/cover;
+      }
+      .dark .hero { background: linear-gradient(90deg, rgba(16,23,20,.98), rgba(16,23,20,.72), rgba(16,23,20,.1)), url("https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1800&q=82") center/cover; }
+      .hero::after { content: ""; position: absolute; inset: auto 0 0; height: 150px; background: linear-gradient(to top, var(--bg), transparent); }
+      .hero-content { position: relative; z-index: 1; max-width: 760px; padding-top: 90px; }
+      .pill {
+        display: inline-flex; align-items: center; gap: 8px; padding: 9px 15px; border-radius: 999px;
+        background: color-mix(in srgb, var(--surface) 82%, transparent); color: var(--moss); font-weight: 850; font-size: .9rem; box-shadow: 0 8px 24px rgba(65,85,72,.1);
+      }
+      h1 { margin: 22px 0 0; font-size: clamp(3.1rem, 8vw, 6.5rem); line-height: .98; }
+      h2 { margin: 0; font-size: clamp(2.25rem, 5vw, 4rem); line-height: 1.08; }
+      h3 { margin: 0; font-size: 1.35rem; line-height: 1.22; }
+      .lead { margin: 24px 0 0; max-width: 680px; color: var(--muted); font-size: clamp(1.05rem, 2vw, 1.25rem); }
+      .hero-actions, .row { display: flex; flex-wrap: wrap; gap: 13px; align-items: center; }
+      .hero-actions { margin-top: 34px; }
+      .btn {
+        display: inline-flex; justify-content: center; align-items: center; gap: 9px; min-height: 52px;
+        padding: 0 23px; border-radius: 999px; border: 0; cursor: pointer; font-weight: 850;
+        transition: transform .22s ease, background .22s ease, box-shadow .22s ease;
+      }
+      .btn:hover { transform: translateY(-3px); }
+      .btn-primary { background: var(--moss); color: #fff; box-shadow: 0 18px 44px rgba(99,121,95,.28); }
+      .btn-primary:hover { background: #536a51; }
+      .btn-secondary { background: rgba(255,255,255,.86); color: #25322d; }
+      .dark .btn-secondary { background: rgba(255,255,255,.11); color: #fff; }
+
+      section { padding: 94px 0; scroll-margin-top: 86px; }
+      .section-soft {
+        background:
+          radial-gradient(circle at 18% 10%, rgba(222,216,244,.46), transparent 30%),
+          linear-gradient(135deg, rgba(247,241,232,.93), rgba(219,232,238,.72));
+      }
+      .dark .section-soft { background: linear-gradient(135deg, #16211c, #17252a); }
+      .section-head { max-width: 760px; margin: 0 auto 46px; text-align: center; }
+      .eyebrow { margin: 0 0 12px; color: var(--moss); text-transform: uppercase; letter-spacing: .18em; font-size: .78rem; font-weight: 900; }
+      .section-head p:last-child { margin: 18px auto 0; color: var(--muted); font-size: 1.08rem; max-width: 680px; }
+      .grid { display: grid; gap: 22px; }
+      .grid-3 { grid-template-columns: 1fr; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .card {
+        background: var(--surface); border: 1px solid var(--ring); border-radius: var(--radius);
+        box-shadow: 0 8px 26px rgba(70,90,78,.06); overflow: hidden; transition: transform .25s ease, box-shadow .25s ease;
+      }
+      .card:hover { transform: translateY(-7px); box-shadow: var(--shadow); }
+      .category { padding: 28px; text-align: left; border: 0; color: var(--ink); cursor: pointer; width: 100%; height: 100%; }
+      .cat-icon { display: grid; place-items: center; width: 58px; height: 58px; margin-bottom: 20px; border-radius: 18px; background: var(--surface-soft); color: var(--moss); font-size: 1.55rem; }
+      .category p, .post p, .about p, .testimonial p, .contact p { color: var(--muted); }
+      .post-img { height: 245px; position: relative; overflow: hidden; }
+      .post-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .65s ease; }
+      .post:hover img { transform: scale(1.06); }
+      .tag { position: absolute; top: 18px; left: 18px; padding: 8px 12px; border-radius: 999px; background: rgba(255,255,255,.9); color: var(--moss); font-size: .72rem; text-transform: uppercase; letter-spacing: .14em; font-weight: 900; }
+      .post-body { padding: 24px; }
+      .meta { display: flex; gap: 9px; flex-wrap: wrap; color: #7f8983; font-size: .9rem; font-weight: 650; margin-bottom: 10px; }
+      .search-wrap { display: flex; flex-direction: column; gap: 14px; margin-bottom: 28px; }
+      .search-box { position: relative; width: 100%; max-width: 570px; }
+      .search-box span { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #8a938e; }
+      input, textarea {
+        width: 100%; border: 1px solid var(--ring); border-radius: 18px; background: color-mix(in srgb, var(--surface) 84%, var(--surface-soft));
+        color: var(--ink); padding: 15px 16px; outline: none;
+      }
+      select {
+        width: 100%; border: 1px solid var(--ring); border-radius: 18px; background: color-mix(in srgb, var(--surface) 84%, var(--surface-soft));
+        color: var(--ink); padding: 15px 16px; outline: none;
+      }
+      .search-box input { border-radius: 999px; padding-left: 48px; min-height: 56px; background: var(--surface); }
+      input:focus, textarea:focus, select:focus { border-color: var(--moss); box-shadow: 0 0 0 4px rgba(99,121,95,.14); }
+      .blog-layout { display: grid; gap: 26px; }
+      .sidebar { display: grid; gap: 20px; align-content: start; }
+      .side-card { padding: 25px; }
+      .trend { display: flex; gap: 14px; padding: 12px; border-radius: 18px; font-weight: 850; }
+      .trend:hover { background: var(--surface-soft); }
+      .number { flex: 0 0 36px; height: 36px; display: grid; place-items: center; border-radius: 999px; background: var(--mist); color: var(--moss); }
+      .quote-card { background: var(--moss); color: #fff; padding: 28px; }
+      .quote-card p { color: rgba(255,255,255,.86); font-size: 1.08rem; }
+      .writer-grid { display: grid; gap: 36px; align-items: start; }
+      .small-lead { font-size: 1.05rem; }
+      .writer-note {
+        margin-top: 26px; padding: 22px; border-radius: 24px; background: var(--surface-soft);
+        border: 1px solid var(--ring);
+      }
+      .writer-note p { margin: 8px 0 0; color: var(--muted); }
+      code { background: rgba(99,121,95,.12); color: var(--moss); border-radius: 8px; padding: 2px 6px; }
+      .writer-form { padding: 24px; }
+      .writer-form .two { display: grid; gap: 14px; }
+      .publish-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-top: 18px; }
+      #publishStatus { color: var(--moss); font-weight: 850; }
+      .about-grid { display: grid; gap: 42px; align-items: center; }
+      .about-img { position: relative; }
+      .about-img img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 34px; box-shadow: var(--shadow); }
+      .mission { position: absolute; left: 20px; right: 20px; bottom: -28px; padding: 20px; background: color-mix(in srgb, var(--surface) 94%, transparent); border-radius: 22px; box-shadow: var(--shadow); }
+      .stats { grid-template-columns: repeat(2, 1fr); margin-top: 28px; }
+      .stat { padding: 22px; border-radius: 24px; background: var(--surface-soft); }
+      .stat strong { display: block; color: var(--moss); font-size: 2rem; line-height: 1; }
+      .stat span { display: block; margin-top: 8px; color: #7f8983; text-transform: uppercase; letter-spacing: .12em; font-size: .72rem; font-weight: 900; }
+      .newsletter { padding: 0 0 54px; }
+      .newsletter-box { padding: 32px; border-radius: 34px; background: #eef4e9; box-shadow: var(--shadow); display: grid; gap: 24px; align-items: center; }
+      .dark .newsletter-box { background: #17231d; }
+      .newsletter form, .contact-form .two { display: grid; gap: 14px; }
+      .testimonial { padding: 26px; }
+      .stars { color: #e8ae42; letter-spacing: 2px; margin-bottom: 15px; }
+      .person { display: flex; gap: 14px; align-items: center; margin-top: 22px; }
+      .person img { width: 56px; height: 56px; object-fit: cover; border-radius: 999px; }
+      .contact-grid { display: grid; gap: 36px; }
+      .socials { display: flex; gap: 12px; margin-top: 25px; }
+      .socials a { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 999px; background: var(--surface); color: var(--moss); box-shadow: 0 8px 24px rgba(65,85,72,.1); }
+      .contact-form { padding: 24px; }
+      label { display: grid; gap: 8px; font-weight: 850; }
+      textarea { resize: vertical; min-height: 140px; }
+      footer { padding: 45px 0; background: #111a16; color: white; }
+      .footer-top { display: flex; flex-direction: column; gap: 25px; }
+      .footer-links { display: flex; flex-wrap: wrap; gap: 14px 22px; color: rgba(255,255,255,.72); font-weight: 750; }
+      .copyright { border-top: 1px solid rgba(255,255,255,.1); margin-top: 30px; padding-top: 20px; color: rgba(255,255,255,.56); font-size: .9rem; }
+      .reveal { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s ease; }
+      .reveal.visible { opacity: 1; transform: translateY(0); }
+
+      @media (min-width: 700px) {
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-3 { grid-template-columns: repeat(2, 1fr); }
+        .search-wrap { flex-direction: row; justify-content: space-between; align-items: center; }
+        .newsletter-box { grid-template-columns: 1fr minmax(320px, 440px); padding: 46px; }
+        .newsletter form { grid-template-columns: 1fr auto; }
+        .contact-form .two, .writer-form .two { grid-template-columns: 1fr 1fr; }
+      }
+
+      @media (min-width: 980px) {
+        .nav-links { display: flex; }
+        .hamburger { display: none; }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .blog-layout { grid-template-columns: 1fr 330px; }
+        .about-grid, .contact-grid, .writer-grid { grid-template-columns: .82fr 1.18fr; }
+        .footer-top { flex-direction: row; align-items: center; justify-content: space-between; }
+      }
+
+      @media (max-width: 520px) {
+        .container { width: min(100% - 28px, 1180px); }
+        section { padding: 74px 0; }
+        .hero { min-height: 94vh; }
+        .btn { width: 100%; }
+        .stats { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="nav" id="nav">
+      <div class="container nav-inner">
+        <a href="#home" class="logo" aria-label="LumaWell home"><span class="logo-mark">☘</span><span>LumaWell</span></a>
+        <nav class="nav-links" aria-label="Main navigation">
+          <a href="#home">Home</a><a href="#yoga">Yoga</a><a href="#fitness">Fitness</a><a href="#exercise">Exercise</a><a href="#wellness">Wellness Tips</a><a href="#about">About</a><a href="#contact">Contact</a>
+        </nav>
+        <div class="nav-actions">
+          <button class="icon-btn" id="themeToggle" aria-label="Toggle dark mode">◐</button>
+          <button class="icon-btn hamburger" id="menuToggle" aria-label="Open menu">☰</button>
+        </div>
+      </div>
+      <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation">
+        <a href="#home">Home</a><a href="#yoga">Yoga</a><a href="#fitness">Fitness</a><a href="#exercise">Exercise</a><a href="#wellness">Wellness Tips</a><a href="#about">About</a><a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="home">
+        <div class="container hero-content reveal">
+          <span class="pill">✦ Premium wellness guidance</span>
+          <h1 class="serif">Transform Your Mind & Body Naturally</h1>
+          <p class="lead">Evidence-informed articles on yoga, fitness, healthy living, mindful exercise, and restorative routines for a calmer, stronger life.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#blog">Read Latest Articles →</a>
+            <a class="btn btn-secondary" href="#newsletter">Start Your Wellness Journey</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="yoga">
+        <div class="container">
+          <div class="section-head reveal">
+            <p class="eyebrow">Explore the practice</p>
+            <h2 class="serif">Featured Categories</h2>
+            <p>Choose the path that meets your body today, from calm mobility to focused strength.</p>
+          </div>
+          <div class="grid grid-3" id="categories"></div>
+        </div>
+      </section>
+
+      <section class="section-soft" id="blog">
+        <div class="container">
+          <div class="section-head reveal">
+            <p class="eyebrow">Latest insights</p>
+            <h2 class="serif">Featured Blog Posts</h2>
+            <p>Search fresh, thoughtful guidance for stronger workouts, deeper recovery, and sustainable wellness.</p>
+          </div>
+          <div class="search-wrap reveal">
+            <label class="search-box"><span>⌕</span><input id="search" type="search" placeholder="Search yoga, strength, meditation..." aria-label="Search blog posts" /></label>
+            <strong id="resultCount">6 curated articles found</strong>
+          </div>
+          <div class="blog-layout">
+            <div class="grid grid-2" id="posts"></div>
+            <aside class="sidebar">
+              <div class="card side-card reveal">
+                <h3>Trending Articles</h3>
+                <div id="trending"></div>
+              </div>
+              <div class="card quote-card reveal" id="wellness">
+                <h3>Daily Wellness Quote</h3>
+                <p>“Small rituals, repeated with care, become the architecture of a healthier life.”</p>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section id="about">
+        <div class="container about-grid">
+          <div class="about-img reveal">
+            <img src="https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?auto=format&fit=crop&w=1000&q=82" alt="Professional wellness trainer guiding a yoga stretch" />
+            <div class="mission"><p class="eyebrow">Our mission</p><strong>Helping people feel strong, clear, capable, and at home in their bodies.</strong></div>
+          </div>
+          <div class="about reveal">
+            <p class="eyebrow">About LumaWell</p>
+            <h2 class="serif">A calmer way to train, recover, and live well.</h2>
+            <p>LumaWell Studio blends yoga education, smart fitness programming, mobility work, nutrition basics, and mindfulness into articles that feel practical and restorative.</p>
+            <p>Our trainers and wellness writers create guidance for real schedules, real bodies, and real progress, with a focus on physical strength and mental health.</p>
+            <div class="grid stats" id="exercise">
+              <div class="stat"><strong data-count="42">0K+</strong><span>monthly readers</span></div>
+              <div class="stat"><strong data-count="600">0+</strong><span>guided routines</span></div>
+              <div class="stat"><strong data-count="94">0%</strong><span>better consistency</span></div>
+              <div class="stat"><strong data-count="12">0 min</strong><span>average daily reset</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="newsletter" id="newsletter">
+        <div class="container">
+          <div class="newsletter-box reveal">
+            <div>
+              <p class="eyebrow">Join the list</p>
+              <h2 class="serif">Get Weekly Fitness & Wellness Tips</h2>
+              <p>Receive one calm, useful email each week with new workouts, yoga flows, recovery ideas, and reader-only wellness resources.</p>
+            </div>
+            <form><input type="email" placeholder="you@example.com" aria-label="Email address" required /><button class="btn btn-primary">Subscribe →</button></form>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="container">
+          <div class="section-head reveal"><p class="eyebrow">Reader stories</p><h2 class="serif">Wellness That Fits Real Life</h2><p>A thoughtful community of readers building confidence, consistency, and calmer routines.</p></div>
+          <div class="grid grid-3" id="testimonials"></div>
+        </div>
+      </section>
+
+      <section class="section-soft" id="contact">
+        <div class="container contact-grid">
+          <div class="contact reveal">
+            <p class="eyebrow">Contact</p>
+            <h2 class="serif">Have a wellness question?</h2>
+            <p>Send us a note about yoga, fitness coaching, collaborations, or article ideas. We usually respond within two business days.</p>
+            <p><strong>⌖</strong> 128 Harmony Lane, Wellness City</p>
+            <p><strong>✉</strong> hello@lumawell.example</p>
+            <div class="socials"><a href="#home">IG</a><a href="#home">FB</a><a href="#home">X</a><a href="#home">YT</a></div>
+          </div>
+          <form class="card contact-form reveal">
+            <div class="two"><label>Name<input /></label><label>Email<input type="email" /></label></div>
+            <label>Subject<input /></label>
+            <label>Message<textarea></textarea></label>
+            <button class="btn btn-primary">Send Message →</button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="footer-top">
+          <div><a class="logo" href="#home"><span class="logo-mark">☘</span><span>LumaWell</span></a><p style="color:rgba(255,255,255,.64);max-width:430px">Yoga, fitness, exercise, and wellness guidance for a naturally stronger life.</p></div>
+          <div class="footer-links"><a href="#home">Home</a><a href="#yoga">Yoga</a><a href="#fitness">Fitness</a><a href="#wellness">Wellness</a><a href="#home">Privacy Policy</a><a href="#home">Terms</a></div>
+        </div>
+        <div class="copyright">Copyright © 2026 LumaWell Studio. All rights reserved.</div>
+      </div>
+    </footer>
+
+    <script>
+      const img = (id, w = 900) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=82`;
+      const categories = [
+        ["☘", "Yoga for Beginners", "Simple flows, breathwork, and form cues to build a grounded practice.", "yoga"],
+        ["◍", "Home Workouts", "Low-equipment sessions designed for strength, stamina, and consistency.", "fitness"],
+        ["♡", "Weight Loss Tips", "Balanced habits for energy, body composition, and long-term wellbeing.", "wellness"],
+        ["✦", "Meditation & Mindfulness", "Restorative rituals that calm the nervous system and sharpen focus.", "wellness"],
+        ["☼", "Healthy Lifestyle", "Sleep, nutrition, recovery, and daily rhythms that support your goals.", "wellness"],
+        ["↯", "Strength Training", "Smart progressive training for strong muscles, joints, and confidence.", "exercise"],
+      ];
+      let posts = [
+        ["Yoga", "A Gentle 20-Minute Morning Yoga Flow for Lasting Energy", "Wake up your spine, open tight hips, and settle your breath with a beginner-friendly flow that fits before work.", "Maya Ellison", "May 14, 2026", img("photo-1545389336-cf090694435e")],
+        ["Fitness", "The Calm Strength Method: Build Muscle Without Burnout", "Use progressive overload, thoughtful recovery, and realistic weekly volume to get stronger while protecting your energy.", "Andre Wells", "May 11, 2026", img("photo-1518611012118-696072aa579a")],
+        ["Wellness", "Seven Mindful Eating Habits That Support Healthy Weight Loss", "Small nutrition rituals can lower stress around food and help you feel satisfied without rigid tracking.", "Nina Patel", "May 8, 2026", img("photo-1490645935967-10de6ba17061")],
+        ["Exercise", "Home Workout Plan: Three Full-Body Sessions Per Week", "A practical no-commute plan with squats, hinges, pushes, pulls, and core work for busy schedules.", "Andre Wells", "May 4, 2026", img("photo-1517836357463-d25dfeac3438")],
+        ["Meditation", "Breathwork for Better Sleep: A Five-Minute Evening Reset", "Wind down with simple breathing patterns that signal safety, soften tension, and prepare the body for rest.", "Maya Ellison", "April 29, 2026", img("photo-1506126613408-eca07ce68773")],
+        ["Fitness", "Mobility Essentials for Runners, Lifters, and Desk Workers", "A targeted mobility sequence for ankles, hips, thoracic spine, and shoulders to move better every day.", "Nina Patel", "April 24, 2026", img("photo-1571019613454-1cb2f99b2d8b")],
+      ];
+      const testimonials = [
+        ["Clara Mitchell", "Yoga reader", "LumaWell helped me restart yoga without feeling behind. The articles feel expert, kind, and easy to return to.", img("photo-1494790108377-be9c29b29330", 300)],
+        ["Jules Carter", "Home fitness member", "The workout guidance is polished but practical. I finally understand how to train consistently without overdoing it.", img("photo-1507003211169-0a1dd7228f2d", 300)],
+        ["Ari Bennett", "Wellness subscriber", "The weekly tips are calm, motivating, and actually usable. My sleep routine and morning walks are much stronger now.", img("photo-1438761681033-6461ffad8d80", 300)],
+      ];
+      const trending = ["How to choose the right yoga mat", "Protein-rich breakfasts for active mornings", "Pilates vs strength training", "A beginner guide to zone 2 cardio"];
+
+      const $ = (selector) => document.querySelector(selector);
+      const create = (html) => {
+        const template = document.createElement("template");
+        template.innerHTML = html.trim();
+        return template.content.firstElementChild;
+      };
+
+      $("#categories").append(...categories.map(([icon, title, text, id]) => create(`<button class="card category reveal" onclick="location.hash='${id}'"><span class="cat-icon">${icon}</span><h3>${title}</h3><p>${text}</p><strong>Browse articles →</strong></button>`)));
+
+      const defaultImage = "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=900&q=82";
+      const normalizePost = (post) => Array.isArray(post)
+        ? { category: post[0], title: post[1], excerpt: post[2], author: post[3], date: post[4], image: post[5] }
+        : { ...post, image: post.image || defaultImage };
+
+      function renderPosts(list) {
+        $("#posts").innerHTML = "";
+        if (!list.length) {
+          $("#posts").append(create(`<article class="card post reveal visible"><div class="post-body"><h3>No posts found</h3><p>Try a different search term, or publish a new article from the writing studio below.</p></div></article>`));
+        } else {
+          $("#posts").append(...list.map((item) => {
+            const { category, title, excerpt, author, date, image } = normalizePost(item);
+            return create(`<article class="card post reveal visible"><div class="post-img"><img src="${image}" alt="" loading="lazy" onerror="this.src='${defaultImage}'"><span class="tag">${category}</span></div><div class="post-body"><div class="meta"><span>${author}</span><span>•</span><time>${date}</time></div><h3>${title}</h3><p>${excerpt}</p><button class="btn btn-secondary">Read More →</button></div></article>`);
+          }));
+        }
+        $("#resultCount").textContent = `${list.length} curated article${list.length === 1 ? "" : "s"} found`;
+      }
+      renderPosts(posts);
+
+      async function loadPosts() {
+        try {
+          const response = await fetch("/api/posts");
+          if (!response.ok) throw new Error("Could not load posts");
+          posts = await response.json();
+          renderPosts(posts);
+        } catch (error) {
+          console.warn(error);
+        }
+      }
+      loadPosts();
+
+      $("#trending").append(...trending.map((item, i) => create(`<a class="trend" href="#blog"><span class="number">${i + 1}</span><span>${item}</span></a>`)));
+      $("#testimonials").append(...testimonials.map(([name, role, text, image]) => create(`<article class="card testimonial reveal"><div class="stars">★★★★★</div><p>“${text}”</p><div class="person"><img src="${image}" alt="${name}" loading="lazy"><div><strong>${name}</strong><br><span>${role}</span></div></div></article>`)));
+
+      $("#search").addEventListener("input", (event) => {
+        const q = event.target.value.toLowerCase().trim();
+        renderPosts(posts.filter((post) => {
+          const normalized = normalizePost(post);
+          return Object.values(normalized).join(" ").toLowerCase().includes(q);
+        }));
+      });
+
+
+      $("#themeToggle").addEventListener("click", () => document.documentElement.classList.toggle("dark"));
+      $("#menuToggle").addEventListener("click", () => $("#mobileMenu").classList.toggle("open"));
+      document.querySelectorAll(".mobile-menu a").forEach((link) => link.addEventListener("click", () => $("#mobileMenu").classList.remove("open")));
+      addEventListener("scroll", () => $("#nav").classList.toggle("scrolled", scrollY > 24), { passive: true });
+
+      const revealObserver = new IntersectionObserver((entries) => entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add("visible");
+      }), { threshold: .12 });
+      document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
+
+      const countObserver = new IntersectionObserver((entries) => entries.forEach((entry) => {
+        if (!entry.isIntersecting || entry.target.dataset.done) return;
+        entry.target.dataset.done = "true";
+        const target = Number(entry.target.dataset.count);
+        const suffix = entry.target.textContent.replace(/[0-9]/g, "");
+        const start = performance.now();
+        const step = (now) => {
+          const progress = Math.min((now - start) / 1300, 1);
+          entry.target.textContent = Math.round(target * (1 - Math.pow(1 - progress, 3))) + suffix;
+          if (progress < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      }), { threshold: .5 });
+      document.querySelectorAll("[data-count]").forEach((el) => countObserver.observe(el));
+    </script>
+  </body>
+</html>

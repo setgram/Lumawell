@@ -1,0 +1,57 @@
+[
+  {
+    "id": "calm-strength-method",
+    "status": "published",
+    "category": "Fitness",
+    "title": "The Calm Strength Method: Build Muscle Without Burnout",
+    "excerpt": "Use progressive overload, thoughtful recovery, and realistic weekly volume to get stronger while protecting your energy.",
+    "content": "Train three or four days per week, keep two reps in reserve on most sets, and add load only when your form feels steady. Strength grows best when recovery is part of the plan.",
+    "author": "Andre Wells",
+    "date": "May 11, 2026",
+    "image": "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=82"
+  },
+  {
+    "id": "mindful-eating-habits",
+    "status": "published",
+    "category": "Wellness",
+    "title": "Seven Mindful Eating Habits That Support Healthy Weight Loss",
+    "excerpt": "Small nutrition rituals can lower stress around food and help you feel satisfied without rigid tracking.",
+    "content": "Start by slowing down your first five bites, adding protein to breakfast, and building plates around color, fiber, and satisfaction. Consistency matters more than perfect rules.",
+    "author": "Nina Patel",
+    "date": "May 8, 2026",
+    "image": "https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=900&q=82"
+  },
+  {
+    "id": "home-workout-plan",
+    "status": "published",
+    "category": "Exercise",
+    "title": "Home Workout Plan: Three Full-Body Sessions Per Week",
+    "excerpt": "A practical no-commute plan with squats, hinges, pushes, pulls, and core work for busy schedules.",
+    "content": "Alternate squat, hinge, push, pull, and carry patterns. Use backpacks, bands, dumbbells, or bodyweight, and progress by adding reps before adding load.",
+    "author": "Andre Wells",
+    "date": "May 4, 2026",
+    "image": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=82"
+  },
+  {
+    "id": "breathwork-better-sleep",
+    "status": "published",
+    "category": "Meditation",
+    "title": "Breathwork for Better Sleep: A Five-Minute Evening Reset",
+    "excerpt": "Wind down with simple breathing patterns that signal safety, soften tension, and prepare the body for rest.",
+    "content": "Try inhaling for four, exhaling for six, and letting the shoulders drop on each out breath. Keep the practice gentle enough that you look forward to repeating it.",
+    "author": "Maya Ellison",
+    "date": "April 29, 2026",
+    "image": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=900&q=82"
+  },
+  {
+    "id": "mobility-essentials",
+    "status": "published",
+    "category": "Fitness",
+    "title": "Mobility Essentials for Runners, Lifters, and Desk Workers",
+    "excerpt": "A targeted mobility sequence for ankles, hips, thoracic spine, and shoulders to move better every day.",
+    "content": "Spend two minutes each on ankle rocks, hip flexor breathing, thoracic rotations, and wall slides. Mobility works best when it is short enough to do often.",
+    "author": "Nina Patel",
+    "date": "April 24, 2026",
+    "image": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=900&q=82"
+  }
+]

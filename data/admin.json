@@ -1,0 +1,5 @@
+{
+  "username": "admin",
+  "salt": "lumawell-local-admin-v1",
+  "passwordHash": "ac6466ce2d7e65cd4b2605e5dd3c726c95fb21e868927afc5ccad93d5a158332"
+}
