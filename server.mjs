@@ -31,6 +31,7 @@ loadEnvFile();
 const mongoUri = process.env.MONGODB_URI;
 const mongoDbName = process.env.MONGODB_DB || "lumawell";
 const mongoCollectionName = process.env.MONGODB_COLLECTION || "posts";
+const maxBodySize = 6_000_000;
 let postsCollectionPromise;
 
 const types = {
@@ -254,9 +255,9 @@ function readBody(request) {
     let body = "";
     request.on("data", (chunk) => {
       body += chunk;
-      if (body.length > 1_000_000) {
+      if (body.length > maxBodySize) {
         request.destroy();
-        reject(new Error("Request body is too large"));
+        reject(new Error("Request body is too large. Use an image smaller than 8MB or a direct image URL."));
       }
     });
     request.on("end", () => resolve(body));

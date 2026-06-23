@@ -204,9 +204,10 @@
             </div>
             <div class="grid two">
               <label>Author<input id="postAuthor" value="LumaWell Editor" /></label>
-              <label>Image URL
+              <label>Image
                 <input id="postImage" placeholder="https://images.unsplash.com/..." />
-                <span class="field-note">Use a direct image URL that opens as an image, not a webpage.</span>
+                <input id="postImageFile" type="file" accept="image/png,image/jpeg,image/webp" />
+                <span class="field-note">Paste a direct image URL, or choose a local image. Local images are resized before publishing.</span>
                 <span class="image-preview" id="imagePreview"><img id="imagePreviewImg" alt="Selected article image preview" /></span>
                 <span class="status error" id="imageStatus" role="status" aria-live="polite"></span>
               </label>
@@ -305,6 +306,36 @@
         image.src = url;
       }
 
+      function fileToImage(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const image = new Image();
+            image.onload = () => resolve(image);
+            image.onerror = () => reject(new Error("Unable to read this image."));
+            image.src = reader.result;
+          };
+          reader.onerror = () => reject(new Error("Unable to read this file."));
+          reader.readAsDataURL(file);
+        });
+      }
+
+      async function resizeLocalImage(file) {
+        if (!file.type.startsWith("image/")) throw new Error("Please choose an image file.");
+        if (file.size > 8 * 1024 * 1024) throw new Error("Choose an image smaller than 8MB.");
+
+        const source = await fileToImage(file);
+        const maxWidth = 1400;
+        const scale = Math.min(1, maxWidth / source.width);
+        const width = Math.round(source.width * scale);
+        const height = Math.round(source.height * scale);
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext("2d").drawImage(source, 0, 0, width, height);
+        return canvas.toDataURL("image/jpeg", 0.82);
+      }
+
       function setLoggedIn(value) {
         $("#loginForm").classList.toggle("hidden", value);
         $("#editorArea").classList.toggle("hidden", !value);
@@ -396,6 +427,20 @@
 
       $("#cancelEdit").addEventListener("click", resetEditor);
       $("#postImage").addEventListener("input", previewImage);
+      $("#postImageFile").addEventListener("change", async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        $("#imageStatus").textContent = "Preparing image...";
+        try {
+          const dataUrl = await resizeLocalImage(file);
+          $("#postImage").value = dataUrl;
+          previewImage();
+        } catch (error) {
+          $("#imageStatus").textContent = error.message;
+          $("#imagePreview").classList.remove("visible");
+        }
+      });
 
       document.querySelector(".toolbar").addEventListener("click", (event) => {
         const button = event.target.closest("button[data-format]");
