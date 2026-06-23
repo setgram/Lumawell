@@ -481,7 +481,7 @@
         } else {
           $("#posts").append(...list.map((item) => {
             const { id, category, title, excerpt, author, date, image } = normalizePost(item);
-            return create(`<article class="card post reveal visible"><div class="post-img"><img src="${escapeHtml(image)}" alt="" loading="lazy" onerror="this.src='${defaultImage}'"><span class="tag">${escapeHtml(category)}</span></div><div class="post-body"><div class="meta"><span>${escapeHtml(author)}</span><span>•</span><time>${escapeHtml(date)}</time></div><h3>${escapeHtml(title)}</h3><p>${escapeHtml(excerpt)}</p><button class="btn btn-secondary" data-read-post="${escapeHtml(id || title)}">Read More →</button></div></article>`);
+            return create(`<article class="card post reveal visible"><div class="post-img"><img src="${escapeHtml(image)}" alt="" loading="lazy" onerror="this.onerror=null;this.src='${defaultImage}'"><span class="tag">${escapeHtml(category)}</span></div><div class="post-body"><div class="meta"><span>${escapeHtml(author)}</span><span>•</span><time>${escapeHtml(date)}</time></div><h3>${escapeHtml(title)}</h3><p>${escapeHtml(excerpt)}</p><button class="btn btn-secondary" data-read-post="${escapeHtml(id || title)}">Read More →</button></div></article>`);
           }));
         }
         $("#resultCount").textContent = `${list.length} curated article${list.length === 1 ? "" : "s"} found`;
@@ -502,8 +502,11 @@
 
       function openArticle(post) {
         const normalized = normalizePost(post);
+        $("#articleImage").onerror = () => {
+          $("#articleImage").onerror = null;
+          $("#articleImage").src = defaultImage;
+        };
         $("#articleImage").src = normalized.image || defaultImage;
-        $("#articleImage").onerror = () => { $("#articleImage").src = defaultImage; };
         $("#articleCategory").textContent = normalized.category || "Wellness";
         $("#articleTitle").textContent = normalized.title || "Untitled Article";
         $("#articleAuthor").textContent = normalized.author || "LumaWell Editor";

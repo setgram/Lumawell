@@ -100,6 +100,17 @@
       .editor h3 { font-size: 1.35rem; }
       .editor p, .editor ul, .editor ol, .editor blockquote { margin: 0 0 14px; }
       .editor blockquote { border-left: 4px solid var(--sage); padding-left: 14px; color: var(--muted); }
+      .image-preview {
+        display: none;
+        margin-top: 10px;
+        overflow: hidden;
+        border: 1px solid var(--ring);
+        border-radius: 18px;
+        background: var(--soft);
+      }
+      .image-preview.visible { display: block; }
+      .image-preview img { width: 100%; height: 180px; object-fit: cover; display: block; }
+      .field-note { color: var(--muted); font-size: .86rem; font-weight: 650; }
       .btn {
         display: inline-flex;
         justify-content: center;
@@ -193,7 +204,12 @@
             </div>
             <div class="grid two">
               <label>Author<input id="postAuthor" value="LumaWell Editor" /></label>
-              <label>Image URL<input id="postImage" placeholder="https://images.unsplash.com/..." /></label>
+              <label>Image URL
+                <input id="postImage" placeholder="https://images.unsplash.com/..." />
+                <span class="field-note">Use a direct image URL that opens as an image, not a webpage.</span>
+                <span class="image-preview" id="imagePreview"><img id="imagePreviewImg" alt="Selected article image preview" /></span>
+                <span class="status error" id="imageStatus" role="status" aria-live="polite"></span>
+              </label>
             </div>
             <label>Short excerpt<textarea id="postExcerpt" rows="3" placeholder="Summarize the article in one or two compelling sentences."></textarea></label>
             <label>Article body</label>
@@ -246,6 +262,49 @@
         return template.content.textContent.trim();
       }
 
+      function normalizeImageUrl(value) {
+        const url = String(value || "").trim();
+        if (!url) return "";
+
+        const driveMatch = url.match(/drive\.google\.com\/file\/d\/([^/]+)/);
+        if (driveMatch) return `https://drive.google.com/uc?export=view&id=${driveMatch[1]}`;
+
+        if (url.includes("dropbox.com/") && url.includes("dl=0")) return url.replace("dl=0", "raw=1");
+        return url;
+      }
+
+      function previewImage() {
+        const rawUrl = $("#postImage").value;
+        const url = normalizeImageUrl(rawUrl);
+        const preview = $("#imagePreview");
+        const image = $("#imagePreviewImg");
+        const status = $("#imageStatus");
+
+        status.textContent = "";
+        preview.classList.remove("visible");
+        image.removeAttribute("src");
+
+        if (!url) return;
+
+        try {
+          new URL(url);
+        } catch {
+          status.textContent = "Enter a valid image URL.";
+          return;
+        }
+
+        image.onload = () => {
+          preview.classList.add("visible");
+          status.textContent = "";
+          if (url !== rawUrl.trim()) $("#postImage").value = url;
+        };
+        image.onerror = () => {
+          preview.classList.remove("visible");
+          status.textContent = "This URL does not load as an image. Use a direct image link.";
+        };
+        image.src = url;
+      }
+
       function setLoggedIn(value) {
         $("#loginForm").classList.toggle("hidden", value);
         $("#editorArea").classList.toggle("hidden", !value);
@@ -285,6 +344,7 @@
         $("#postCategory").value = post.category || "Wellness";
         $("#postAuthor").value = post.author || "LumaWell Editor";
         $("#postImage").value = post.image || "";
+        previewImage();
         $("#postExcerpt").value = post.excerpt || "";
         $("#postContent").innerHTML = post.content || "";
         $("#postForm").scrollIntoView({ behavior: "smooth", block: "start" });
@@ -294,6 +354,7 @@
         editingId = null;
         $("#postForm").reset();
         $("#postContent").innerHTML = "";
+        previewImage();
         $("#postAuthor").value = "LumaWell Editor";
         $("#formTitle").textContent = "Publish a new article";
         $("#formHelp").textContent = "Once published, your post is saved by the backend and appears on the homepage blog grid.";
@@ -334,6 +395,7 @@
       });
 
       $("#cancelEdit").addEventListener("click", resetEditor);
+      $("#postImage").addEventListener("input", previewImage);
 
       document.querySelector(".toolbar").addEventListener("click", (event) => {
         const button = event.target.closest("button[data-format]");
@@ -388,6 +450,7 @@
         status.textContent = "Publishing...";
         submit.disabled = true;
         const content = $("#postContent").innerHTML.trim();
+        const imageUrl = normalizeImageUrl($("#postImage").value);
 
         if (plainTextFromHtml(content).length < 20) {
           status.className = "status error";
@@ -404,7 +467,7 @@
               title: $("#postTitle").value,
               category: $("#postCategory").value,
               author: $("#postAuthor").value,
-              image: $("#postImage").value,
+              image: imageUrl,
               excerpt: $("#postExcerpt").value,
               content,
             }),
