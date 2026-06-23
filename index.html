@@ -137,6 +137,27 @@
       .tag { position: absolute; top: 18px; left: 18px; padding: 8px 12px; border-radius: 999px; background: rgba(255,255,255,.9); color: var(--moss); font-size: .72rem; text-transform: uppercase; letter-spacing: .14em; font-weight: 900; }
       .post-body { padding: 24px; }
       .meta { display: flex; gap: 9px; flex-wrap: wrap; color: #7f8983; font-size: .9rem; font-weight: 650; margin-bottom: 10px; }
+      .article-modal {
+        position: fixed; inset: 0; z-index: 90; display: none; align-items: start; justify-content: center;
+        padding: 96px 18px 28px; background: rgba(16, 23, 20, .62); overflow-y: auto;
+      }
+      .article-modal.open { display: flex; }
+      .article-shell { width: min(880px, 100%); background: var(--surface); border-radius: 32px; box-shadow: var(--shadow); overflow: hidden; }
+      .article-hero { position: relative; height: min(48vw, 360px); min-height: 230px; }
+      .article-hero img { width: 100%; height: 100%; object-fit: cover; }
+      .article-close {
+        position: absolute; top: 18px; right: 18px; width: 44px; height: 44px; border: 0; border-radius: 999px;
+        background: rgba(255,255,255,.92); color: #25322d; cursor: pointer; font-size: 1.35rem; font-weight: 900;
+      }
+      .article-content { padding: clamp(24px, 5vw, 52px); }
+      .article-content h1 { font-size: clamp(2.4rem, 6vw, 4.5rem); line-height: 1.02; margin: 10px 0 18px; }
+      .article-content h2 { font-size: clamp(1.9rem, 4vw, 2.6rem); margin: 34px 0 12px; }
+      .article-content h3 { font-size: 1.45rem; margin: 26px 0 10px; }
+      .article-copy { color: var(--muted); font-size: 1.08rem; line-height: 1.82; }
+      .article-copy p, .article-copy ul, .article-copy ol, .article-copy blockquote { margin: 0 0 20px; }
+      .article-copy ul, .article-copy ol { padding-left: 1.35rem; }
+      .article-copy a { color: var(--moss); font-weight: 850; text-decoration: underline; text-underline-offset: 4px; }
+      .article-copy blockquote { border-left: 4px solid var(--sage); padding-left: 18px; font-size: 1.18rem; color: var(--ink); }
       .search-wrap { display: flex; flex-direction: column; gap: 14px; margin-bottom: 28px; }
       .search-box { position: relative; width: 100%; max-width: 570px; }
       .search-box span { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #8a938e; }
@@ -356,6 +377,21 @@
       </section>
     </main>
 
+    <div class="article-modal" id="articleModal" role="dialog" aria-modal="true" aria-labelledby="articleTitle">
+      <article class="article-shell">
+        <div class="article-hero">
+          <img id="articleImage" alt="" />
+          <button class="article-close" id="articleClose" aria-label="Close article">×</button>
+        </div>
+        <div class="article-content">
+          <p class="eyebrow" id="articleCategory"></p>
+          <h1 class="serif" id="articleTitle"></h1>
+          <div class="meta"><span id="articleAuthor"></span><span>•</span><time id="articleDate"></time></div>
+          <div class="article-copy" id="articleBody"></div>
+        </div>
+      </article>
+    </div>
+
     <footer>
       <div class="container">
         <div class="footer-top">
@@ -397,6 +433,39 @@
         template.innerHTML = html.trim();
         return template.content.firstElementChild;
       };
+      const escapeHtml = (value) => String(value || "").replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;",
+      }[char]));
+      const allowedTags = new Set(["P", "BR", "H1", "H2", "H3", "UL", "OL", "LI", "STRONG", "B", "EM", "I", "A", "BLOCKQUOTE"]);
+      function sanitizeHtml(html) {
+        const template = document.createElement("template");
+        template.innerHTML = html;
+        template.content.querySelectorAll("*").forEach((node) => {
+          if (!allowedTags.has(node.tagName)) {
+            node.replaceWith(...node.childNodes);
+            return;
+          }
+          [...node.attributes].forEach((attribute) => {
+            const keepHref = node.tagName === "A" && attribute.name === "href" && /^https?:\/\//i.test(attribute.value);
+            if (!keepHref) node.removeAttribute(attribute.name);
+          });
+          if (node.tagName === "A") {
+            node.setAttribute("target", "_blank");
+            node.setAttribute("rel", "noopener noreferrer");
+          }
+        });
+        return template.innerHTML;
+      }
+      function formatContent(content) {
+        const value = String(content || "").trim();
+        if (!value) return "<p>This article is being prepared.</p>";
+        if (/<\/?[a-z][\s\S]*>/i.test(value)) return sanitizeHtml(value);
+        return value.split(/\n{2,}/).map((paragraph) => `<p>${escapeHtml(paragraph).replace(/\n/g, "<br>")}</p>`).join("");
+      }
 
       $("#categories").append(...categories.map(([icon, title, text, id]) => create(`<button class="card category reveal" onclick="location.hash='${id}'"><span class="cat-icon">${icon}</span><h3>${title}</h3><p>${text}</p><strong>Browse articles →</strong></button>`)));
 
@@ -411,8 +480,8 @@
           $("#posts").append(create(`<article class="card post reveal visible"><div class="post-body"><h3>No posts found</h3><p>Try a different search term, or publish a new article from the writing studio below.</p></div></article>`));
         } else {
           $("#posts").append(...list.map((item) => {
-            const { category, title, excerpt, author, date, image } = normalizePost(item);
-            return create(`<article class="card post reveal visible"><div class="post-img"><img src="${image}" alt="" loading="lazy" onerror="this.src='${defaultImage}'"><span class="tag">${category}</span></div><div class="post-body"><div class="meta"><span>${author}</span><span>•</span><time>${date}</time></div><h3>${title}</h3><p>${excerpt}</p><button class="btn btn-secondary">Read More →</button></div></article>`);
+            const { id, category, title, excerpt, author, date, image } = normalizePost(item);
+            return create(`<article class="card post reveal visible"><div class="post-img"><img src="${escapeHtml(image)}" alt="" loading="lazy" onerror="this.src='${defaultImage}'"><span class="tag">${escapeHtml(category)}</span></div><div class="post-body"><div class="meta"><span>${escapeHtml(author)}</span><span>•</span><time>${escapeHtml(date)}</time></div><h3>${escapeHtml(title)}</h3><p>${escapeHtml(excerpt)}</p><button class="btn btn-secondary" data-read-post="${escapeHtml(id || title)}">Read More →</button></div></article>`);
           }));
         }
         $("#resultCount").textContent = `${list.length} curated article${list.length === 1 ? "" : "s"} found`;
@@ -430,6 +499,43 @@
         }
       }
       loadPosts();
+
+      function openArticle(post) {
+        const normalized = normalizePost(post);
+        $("#articleImage").src = normalized.image || defaultImage;
+        $("#articleImage").onerror = () => { $("#articleImage").src = defaultImage; };
+        $("#articleCategory").textContent = normalized.category || "Wellness";
+        $("#articleTitle").textContent = normalized.title || "Untitled Article";
+        $("#articleAuthor").textContent = normalized.author || "LumaWell Editor";
+        $("#articleDate").textContent = normalized.date || "";
+        $("#articleBody").innerHTML = formatContent(normalized.content || normalized.excerpt);
+        $("#articleModal").classList.add("open");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeArticle() {
+        $("#articleModal").classList.remove("open");
+        document.body.style.overflow = "";
+      }
+
+      $("#posts").addEventListener("click", (event) => {
+        const button = event.target.closest("[data-read-post]");
+        if (!button) return;
+        const id = button.dataset.readPost;
+        const post = posts.find((item) => {
+          const normalized = normalizePost(item);
+          return String(normalized.id || normalized.title) === id;
+        });
+        if (post) openArticle(post);
+      });
+
+      $("#articleClose").addEventListener("click", closeArticle);
+      $("#articleModal").addEventListener("click", (event) => {
+        if (event.target.id === "articleModal") closeArticle();
+      });
+      window.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeArticle();
+      });
 
       $("#trending").append(...trending.map((item, i) => create(`<a class="trend" href="#blog"><span class="number">${i + 1}</span><span>${item}</span></a>`)));
       $("#testimonials").append(...testimonials.map(([name, role, text, image]) => create(`<article class="card testimonial reveal"><div class="stars">★★★★★</div><p>“${text}”</p><div class="person"><img src="${image}" alt="${name}" loading="lazy"><div><strong>${name}</strong><br><span>${role}</span></div></div></article>`)));

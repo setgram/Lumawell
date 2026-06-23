@@ -269,13 +269,18 @@ function slugify(value) {
   return slug || `post-${Date.now()}`;
 }
 
+function stripHtml(value) {
+  return String(value || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+}
+
 function cleanPost(input, existing = {}) {
   const title = String(input.title || "").trim();
   const content = String(input.content || "").trim();
+  const contentText = stripHtml(content);
   if (title.length < 4) return { error: "Title must be at least 4 characters." };
-  if (content.length < 20) return { error: "Article content must be at least 20 characters." };
+  if (contentText.length < 20) return { error: "Article content must be at least 20 characters." };
 
-  const excerpt = String(input.excerpt || content.slice(0, 150)).trim();
+  const excerpt = String(input.excerpt || contentText.slice(0, 150)).trim();
   return {
     status: "published",
     category: String(input.category || "Wellness").trim().slice(0, 40),
